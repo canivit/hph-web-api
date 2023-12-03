@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "CommonJS",
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "allowUnusedLabels": false,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitAny": true,
+    "skipLibCheck": true,
+    "outDir": "dist",
+    "resolveJsonModule": true,
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules"]
+}
