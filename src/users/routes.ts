@@ -24,7 +24,7 @@ async function signin(req: Request<{}, {}, Credentials>, res: Response) {
   }
 
   req.session.currentUser = user;
-  res.send(user);
+  res.json(user);
 }
 
 async function signup(req: Request<{}, {}, User>, res: Response) {
@@ -45,7 +45,7 @@ async function getSignedInUser(req: Request, res: Response) {
     return;
   }
 
-  res.send(req.session.currentUser);
+  res.json(req.session.currentUser);
 }
 
 async function signout(req: Request, res: Response) {
