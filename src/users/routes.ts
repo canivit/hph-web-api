@@ -2,12 +2,6 @@ import { Express, Request, Response } from "express";
 import * as dao from "./dao";
 import { User } from "./model";
 
-declare module "express-session" {
-  interface SessionData {
-    currentUser: User;
-  }
-}
-
 export function userRoutes(app: Express) {
   app.get("/api/users/signed_in", getSignedInUser);
   app.get("/api/users/signout", signout);

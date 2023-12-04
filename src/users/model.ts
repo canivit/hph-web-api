@@ -54,7 +54,7 @@ const userSchema = new mongoose.Schema<User>(
       enum: ["Beginner", "Intermediate", "Advanced"],
     },
   },
-  { collection: "user", discriminatorKey: "role" }
+  { collection: "user" }
 );
 
 export const userModel = mongoose.model<User>("user", userSchema);

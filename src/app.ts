@@ -4,6 +4,14 @@ import mongoose from "mongoose";
 import { userRoutes } from "./users/routes";
 import session, { SessionOptions } from "express-session";
 import "dotenv/config";
+import { User } from "./users/model";
+import { workoutRoutes } from "./workouts/routes";
+
+declare module "express-session" {
+  interface SessionData {
+    currentUser: User;
+  }
+}
 
 mongoose.connect(process.env.DB_CONNECTION_STRING!);
 
@@ -32,5 +40,6 @@ app.use(session(sessionOptions));
 app.use(express.json());
 
 userRoutes(app);
+workoutRoutes(app);
 
 app.listen(process.env.PORT || 4000);
