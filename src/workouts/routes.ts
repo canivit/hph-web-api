@@ -3,12 +3,16 @@ import { Workout } from "./model";
 import * as dao from "./dao";
 
 export function workoutRoutes(app: Express) {
+  app.get("/api/workouts", findAllWorkouts);
   app.get("/api/workouts/:workoutId", findWorkoutById);
-  app.put("/api/workouts", createWorkout);
+  app.put("/api/users/:trainerId/workouts", createWorkout);
   app.post("/api/workouts/:workoutId", updateWorkout);
 }
 
-async function createWorkout(req: Request<{}, {}, Workout>, res: Response) {
+async function createWorkout(
+  req: Request<{ trainerId: string }, {}, Workout>,
+  res: Response
+) {
   if (
     req.session.currentUser === undefined ||
     req.session.currentUser.role !== "Trainer"
@@ -17,9 +21,13 @@ async function createWorkout(req: Request<{}, {}, Workout>, res: Response) {
     return;
   }
 
-  req.body.trainer_id = req.session.currentUser._id;
-  const workout = await dao.createWorkout(req.body);
+  const workout = await dao.createWorkout(req.params.trainerId, req.body);
   res.json(workout);
+}
+
+async function findAllWorkouts(_req: Request, res: Response) {
+  const workouts = await dao.findAllWorkouts();
+  res.json(workouts);
 }
 
 async function findWorkoutById(
@@ -48,7 +56,7 @@ async function updateWorkout(
     return;
   }
 
-  if (workout.trainer_id !== req.session.currentUser._id) {
+  if (workout.trainer.username !== req.session.currentUser.username) {
     res.status(403).send("Not authorized to update workout");
     return;
   }

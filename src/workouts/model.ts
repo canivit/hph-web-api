@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { Schema, Types } from "mongoose";
 
 export type Workout = {
   _id: string;
@@ -7,7 +7,7 @@ export type Workout = {
   level: Level;
   post_date: Date;
   steps: WorkoutStep[];
-  trainer_id: string;
+  trainer: Types.ObjectId;
 };
 
 export type WorkoutStep = {
@@ -49,7 +49,7 @@ const workoutSchema = new mongoose.Schema<Workout>(
         rest: { type: Number, required: true },
       },
     ],
-    trainer_id: { type: String, required: true },
+    trainer: { type: Schema.Types.ObjectId, ref: "user" },
   },
   {
     collection: "workout",
