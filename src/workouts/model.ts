@@ -1,7 +1,6 @@
 import mongoose, { Schema, Types } from "mongoose";
 
 export type Workout = {
-  _id: string;
   title: string;
   description: string;
   level: Level;

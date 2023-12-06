@@ -6,6 +6,7 @@ import session, { SessionOptions } from "express-session";
 import "dotenv/config";
 import { User } from "./users/model";
 import { workoutRoutes } from "./workouts/routes";
+import { ratingRoutes } from "./ratings/routes";
 
 declare module "express-session" {
   interface SessionData {
@@ -41,5 +42,6 @@ app.use(express.json());
 
 userRoutes(app);
 workoutRoutes(app);
+ratingRoutes(app);
 
 app.listen(process.env.PORT || 4000);

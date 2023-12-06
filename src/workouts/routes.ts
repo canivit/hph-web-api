@@ -5,15 +5,12 @@ import * as dao from "./dao";
 export function workoutRoutes(app: Express) {
   app.get("/api/workouts", findAllWorkouts);
   app.get("/api/workouts/:workoutId", findWorkoutById);
-  app.put("/api/users/:trainerId/workouts", createWorkout);
+  app.put("/api/workouts", createWorkout);
   app.post("/api/workouts/:workoutId", updateWorkout);
   app.delete("/api/workouts/:workoutId", deleteWorkout);
 }
 
-async function createWorkout(
-  req: Request<{ trainerId: string }, {}, Workout>,
-  res: Response
-) {
+async function createWorkout(req: Request<{}, {}, Workout>, res: Response) {
   if (
     req.session.currentUser === undefined ||
     req.session.currentUser.role !== "Trainer"
@@ -22,7 +19,10 @@ async function createWorkout(
     return;
   }
 
-  const workout = await dao.createWorkout(req.params.trainerId, req.body);
+  const workout = await dao.createWorkout(
+    req.session.currentUser._id,
+    req.body
+  );
   res.json(workout);
 }
 

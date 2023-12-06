@@ -1,4 +1,4 @@
-export function removeId(obj: { _id: string; [key: string]: any }) {
+export function removeId(obj: { [key: string]: any }) {
   const { _id, ...rest } = obj;
   return rest;
 }
