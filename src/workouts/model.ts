@@ -18,6 +18,7 @@ export type WorkoutStep = {
 };
 
 export type Exercise = {
+  id: string;
   name: string;
   targetMuscle: string;
   equipment: string;
@@ -39,6 +40,7 @@ const workoutSchema = new mongoose.Schema<Workout>(
     steps: [
       {
         exercise: {
+          id: { type: String, required: true },
           name: { type: String, required: true },
           targetMuscle: { type: String, required: true },
           equipment: { type: String, required: true },
