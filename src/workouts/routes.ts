@@ -7,6 +7,7 @@ export function workoutRoutes(app: Express) {
   app.get("/api/workouts/:workoutId", findWorkoutById);
   app.put("/api/users/:trainerId/workouts", createWorkout);
   app.post("/api/workouts/:workoutId", updateWorkout);
+  app.delete("/api/workouts/:workoutId", deleteWorkout);
 }
 
 async function createWorkout(
@@ -64,4 +65,31 @@ async function updateWorkout(
   await dao.updateWorkout(req.params.workoutId, req.body);
   workout = await dao.findWorkoutById(req.params.workoutId);
   res.json(workout);
+}
+
+async function deleteWorkout(
+  req: Request<{ workoutId: string }>,
+  res: Response
+) {
+  if (
+    req.session.currentUser === undefined ||
+    req.session.currentUser.role !== "Trainer"
+  ) {
+    res.status(401).send("Not signed in as trainer");
+    return;
+  }
+
+  const workout = await dao.findWorkoutById(req.params.workoutId);
+  if (workout === null) {
+    res.status(404).send("Workout not found");
+    return;
+  }
+
+  if (workout.trainer.username !== req.session.currentUser.username) {
+    res.status(403).send("Not authorized to delete workout");
+    return;
+  }
+
+  await dao.deleteWorkout(req.params.workoutId);
+  res.sendStatus(200);
 }
