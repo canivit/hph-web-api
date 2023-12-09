@@ -5,6 +5,7 @@ import { User } from "./model";
 export function userRoutes(app: Express) {
   app.get("/api/users/signed_in", getSignedInUser);
   app.get("/api/users/signout", signout);
+  app.get("/api/users/:userId", findUserById);
   app.post("/api/users/signin", signin);
   app.post("/api/users/signup", signup);
   app.post("/api/users/:userId", updateUser);
@@ -70,6 +71,16 @@ async function updateUser(
   await dao.updateUser(userId, req.body);
   req.session.currentUser = (await dao.findUserById(userId))!;
   res.json(req.session.currentUser);
+}
+
+async function findUserById(req: Request<{ userId: string }>, res: Response) {
+  const user = await dao.findUserById(req.params.userId);
+  if (!user) {
+    res.status(404).send("User not found");
+    return;
+  }
+
+  res.json(user);
 }
 
 type Credentials = {
