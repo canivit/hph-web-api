@@ -32,3 +32,29 @@ export async function createRating(
   });
   return populatedRating;
 }
+
+export async function findRatingsByWorkoutId(workoutId: string) {
+  return await ratingModel
+    .find({ workout: workoutId })
+    .populate<{ athlete: User }>({ path: "athlete" })
+    .exec();
+}
+
+export async function updateRating(ratingId: string, rating: Rating) {
+  return await ratingModel
+    .findByIdAndUpdate(
+      ratingId,
+      {
+        value: rating.value,
+        comment: rating.comment,
+      },
+      { new: true }
+    )
+    .populate<{ athlete: User }>({ path: "athlete" });
+}
+
+export async function deleteRating(ratingId: string) {
+  return await ratingModel
+    .findOneAndDelete({ _id: ratingId })
+    .populate<{ athlete: User }>({ path: "athlete" });
+}

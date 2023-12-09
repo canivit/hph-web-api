@@ -3,7 +3,10 @@ import { Rating } from "./model";
 import * as dao from "./dao";
 
 export function ratingRoutes(app: Express) {
-  app.put("/api/ratings/:workoutId", createRating);
+  app.put("/api/ratings/workout/:workoutId", createRating);
+  app.get("/api/ratings/workout/:workoutId", findRatingsByWorkoutId);
+  app.post("/api/ratings/:ratingId", updateRating);
+  app.delete("/api/ratings/:ratingId", deleteRating);
 }
 
 async function createRating(
@@ -35,4 +38,61 @@ async function createRating(
   }
 
   res.json(result);
+}
+
+async function findRatingsByWorkoutId(
+  req: Request<{ workoutId: string }>,
+  res: Response
+) {
+  const ratings = await dao.findRatingsByWorkoutId(req.params.workoutId);
+  res.json(ratings);
+}
+
+async function updateRating(
+  req: Request<{ ratingId: string }, {}, Rating>,
+  res: Response
+) {
+  if (
+    req.session.currentUser === undefined ||
+    req.session.currentUser.role !== "Athlete"
+  ) {
+    res.status(401).send("Not signed in as athlete");
+    return;
+  }
+
+  const rating = await dao.updateRating(req.params.ratingId, req.body);
+  if (rating === null) {
+    res.status(404).send("Rating not found");
+    return;
+  }
+
+  if (req.session.currentUser.username !== rating.athlete.username) {
+    res.status(401).send("Not authorized to update rating");
+    return;
+  }
+
+  res.json(rating);
+}
+
+async function deleteRating(req: Request<{ ratingId: string }>, res: Response) {
+  if (
+    req.session.currentUser === undefined ||
+    req.session.currentUser.role !== "Athlete"
+  ) {
+    res.status(401).send("Not signed in as athlete");
+    return;
+  }
+
+  const rating = await dao.deleteRating(req.params.ratingId);
+  if (rating === null) {
+    res.status(404).send("Rating not found");
+    return;
+  }
+
+  if (req.session.currentUser.username !== rating.athlete.username) {
+    res.status(401).send("Not authorized to delete rating");
+    return;
+  }
+
+  res.json(rating);
 }
