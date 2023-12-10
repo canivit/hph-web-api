@@ -34,3 +34,10 @@ export async function findAllWorkouts() {
 export async function deleteWorkout(workoutId: string) {
   return await workoutModel.deleteOne({ _id: workoutId });
 }
+
+export async function findWorkoutsByUserId(userId: string) {
+  return await workoutModel
+    .find({ trainer: userId })
+    .sort({ post_date: -1 })
+    .populate<{ trainer: User }>({ path: "trainer" });
+}

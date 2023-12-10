@@ -5,6 +5,7 @@ import * as dao from "./dao";
 export function workoutRoutes(app: Express) {
   app.get("/api/workouts", findAllWorkouts);
   app.get("/api/workouts/:workoutId", findWorkoutById);
+  app.get("/api/workouts/user/:userId", findWorkoutsByUserId);
   app.put("/api/workouts", createWorkout);
   app.post("/api/workouts/:workoutId", updateWorkout);
   app.delete("/api/workouts/:workoutId", deleteWorkout);
@@ -92,4 +93,12 @@ async function deleteWorkout(
 
   await dao.deleteWorkout(req.params.workoutId);
   res.sendStatus(200);
+}
+
+async function findWorkoutsByUserId(
+  req: Request<{ userId: string }>,
+  res: Response
+) {
+  const workouts = await dao.findWorkoutsByUserId(req.params.userId);
+  res.json(workouts);
 }
