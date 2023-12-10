@@ -19,8 +19,6 @@
         shellHook = ''
           export PATH=$PWD/node_modules/.bin:$PATH
         '';
-        NODE_ENV = "development";
-        FRONTEND_URL = "http://localhost:3000";
       };
     });
 }
