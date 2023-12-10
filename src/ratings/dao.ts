@@ -1,6 +1,6 @@
 import { User } from "../users/model";
 import { removeId } from "../util";
-import { workoutModel } from "../workouts/model";
+import { Workout, workoutModel } from "../workouts/model";
 import { Rating, ratingModel } from "./model";
 
 export async function createRating(
@@ -57,4 +57,11 @@ export async function deleteRating(ratingId: string) {
   return await ratingModel
     .findOneAndDelete({ _id: ratingId })
     .populate<{ athlete: User }>({ path: "athlete" });
+}
+
+export async function findRatingsByUserId(userId: string) {
+  return await ratingModel
+    .find({ athlete: userId })
+    .populate<{ workout: Workout }>({ path: "workout" })
+    .exec();
 }

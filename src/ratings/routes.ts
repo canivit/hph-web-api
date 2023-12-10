@@ -5,6 +5,7 @@ import * as dao from "./dao";
 export function ratingRoutes(app: Express) {
   app.put("/api/ratings/workout/:workoutId", createRating);
   app.get("/api/ratings/workout/:workoutId", findRatingsByWorkoutId);
+  app.get("/api/ratings/user/:userId", findRatingsByUserId);
   app.post("/api/ratings/:ratingId", updateRating);
   app.delete("/api/ratings/:ratingId", deleteRating);
 }
@@ -95,4 +96,12 @@ async function deleteRating(req: Request<{ ratingId: string }>, res: Response) {
   }
 
   res.json(rating);
+}
+
+async function findRatingsByUserId(
+  req: Request<{ userId: string }>,
+  res: Response
+) {
+  const ratings = await dao.findRatingsByUserId(req.params.userId);
+  res.json(ratings);
 }
