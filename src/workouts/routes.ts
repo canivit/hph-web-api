@@ -5,6 +5,10 @@ import * as dao from "./dao";
 export function workoutRoutes(app: Express) {
   app.get("/api/workouts", findAllWorkouts);
   app.get("/api/workouts/:workoutId", findWorkoutById);
+  app.get(
+    "/api/workouts/user/:userId/recent/:limit",
+    findMostRecentWorkoutsByUserId
+  );
   app.get("/api/workouts/user/:userId", findWorkoutsByUserId);
   app.put("/api/workouts", createWorkout);
   app.post("/api/workouts/:workoutId", updateWorkout);
@@ -100,5 +104,16 @@ async function findWorkoutsByUserId(
   res: Response
 ) {
   const workouts = await dao.findWorkoutsByUserId(req.params.userId);
+  res.json(workouts);
+}
+
+async function findMostRecentWorkoutsByUserId(
+  req: Request<{ userId: string; limit: string }>,
+  res: Response
+) {
+  const workouts = await dao.findMostRecentWorkoutsByUserId(
+    req.params.userId,
+    parseInt(req.params.limit)
+  );
   res.json(workouts);
 }

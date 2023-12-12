@@ -41,3 +41,14 @@ export async function findWorkoutsByUserId(userId: string) {
     .sort({ post_date: -1 })
     .populate<{ trainer: User }>({ path: "trainer" });
 }
+
+export async function findMostRecentWorkoutsByUserId(
+  userId: string,
+  limit: number
+) {
+  return await workoutModel
+    .find({ trainer: userId })
+    .sort({ post_date: -1 })
+    .limit(limit)
+    .populate<{ trainer: User }>({ path: "trainer" });
+}
