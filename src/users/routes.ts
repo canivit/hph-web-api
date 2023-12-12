@@ -5,6 +5,7 @@ import { User } from "./model";
 export function userRoutes(app: Express) {
   app.get("/api/users/signed_in", getSignedInUser);
   app.get("/api/users/signout", signout);
+  app.get("/api/users/recent/:limit", findMostRecentlyCreatedUsers);
   app.get("/api/users/:userId", findUserById);
   app.post("/api/users/signin", signin);
   app.post("/api/users/signup", signup);
@@ -81,6 +82,15 @@ async function findUserById(req: Request<{ userId: string }>, res: Response) {
   }
 
   res.json(user);
+}
+
+async function findMostRecentlyCreatedUsers(
+  req: Request<{ limit: string }>,
+  res: Response
+) {
+  const limit = parseInt(req.params.limit);
+  const users = await dao.findMostRecentlyCreatedUsers(limit);
+  res.json(users);
 }
 
 type Credentials = {

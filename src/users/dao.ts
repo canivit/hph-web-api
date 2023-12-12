@@ -21,3 +21,20 @@ export const updateUser = async (id: string, user: User) =>
 
 export const deleteUser = async (id: string) =>
   userModel.deleteOne({ _id: id });
+
+export async function findMostRecentlyCreatedUsers(limit: number) {
+  const trainers = await userModel
+    .find({ role: "Trainer" })
+    .sort({ _id: -1 })
+    .limit(limit);
+
+  const athletes = await userModel
+    .find({ role: "Athlete" })
+    .sort({ _id: -1 })
+    .limit(limit);
+
+  return {
+    trainers,
+    athletes,
+  };
+}
