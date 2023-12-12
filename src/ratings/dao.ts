@@ -36,6 +36,7 @@ export async function createRating(
 export async function findRatingsByWorkoutId(workoutId: string) {
   return await ratingModel
     .find({ workout: workoutId })
+    .sort({ date: -1 })
     .populate<{ athlete: User }>({ path: "athlete" })
     .exec();
 }
@@ -62,6 +63,7 @@ export async function deleteRating(ratingId: string) {
 export async function findRatingsByUserId(userId: string) {
   return await ratingModel
     .find({ athlete: userId })
+    .sort({ date: -1 })
     .populate<{ workout: Workout }>({ path: "workout" })
     .exec();
 }
