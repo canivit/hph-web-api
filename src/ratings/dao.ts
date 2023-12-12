@@ -65,3 +65,14 @@ export async function findRatingsByUserId(userId: string) {
     .populate<{ workout: Workout }>({ path: "workout" })
     .exec();
 }
+
+export async function findMostRecentWorkoutsByUserId(
+  userId: string,
+  limit: number
+) {
+  return await ratingModel
+    .find({ athlete: userId })
+    .sort({ date: -1 })
+    .limit(limit)
+    .populate<{ workout: Workout }>({ path: "workout" });
+}

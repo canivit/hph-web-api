@@ -5,6 +5,10 @@ import * as dao from "./dao";
 export function ratingRoutes(app: Express) {
   app.put("/api/ratings/workout/:workoutId", createRating);
   app.get("/api/ratings/workout/:workoutId", findRatingsByWorkoutId);
+  app.get(
+    "/api/ratings/user/:userId/recent/:limit",
+    findMostRecentWorkoutsByUserId
+  );
   app.get("/api/ratings/user/:userId", findRatingsByUserId);
   app.post("/api/ratings/:ratingId", updateRating);
   app.delete("/api/ratings/:ratingId", deleteRating);
@@ -103,5 +107,17 @@ async function findRatingsByUserId(
   res: Response
 ) {
   const ratings = await dao.findRatingsByUserId(req.params.userId);
+  res.json(ratings);
+}
+
+async function findMostRecentWorkoutsByUserId(
+  req: Request<{ userId: string; limit: string }>,
+  res: Response
+) {
+  const limit = parseInt(req.params.limit);
+  const ratings = await dao.findMostRecentWorkoutsByUserId(
+    req.params.userId,
+    limit
+  );
   res.json(ratings);
 }
