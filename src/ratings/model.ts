@@ -1,7 +1,7 @@
 import mongoose, { Schema, Types } from "mongoose";
 
 export type Rating = {
-  value: 1 | 2 | 3 | 4 | 5;
+  value: number;
   comment: string;
   date: Date;
   athlete: Types.ObjectId;
@@ -10,7 +10,7 @@ export type Rating = {
 
 const ratingSchema = new mongoose.Schema<Rating>(
   {
-    value: { type: Number, required: true, min: 1, max: 5 },
+    value: { type: Number, required: true, min: 0, max: 5 },
     comment: { type: String, required: true },
     date: { type: Date, required: true },
     athlete: { type: Schema.Types.ObjectId, ref: "user", required: true },
